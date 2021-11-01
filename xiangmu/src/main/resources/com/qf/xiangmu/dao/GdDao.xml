@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.xiangmu.dao.GdDao">
+  <resultMap id="BaseResultMap" type="com.qf.xiangmu.pojo.Gd">
+    <id column="gd_id" jdbcType="INTEGER" property="gdId" />
+    <result column="gd_name" jdbcType="VARCHAR" property="gdName" />
+    <result column="gd_addr" jdbcType="VARCHAR" property="gdAddr" />
+    <result column="gd_info" jdbcType="VARCHAR" property="gdInfo" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    gd_id, gd_name, gd_addr, gd_info
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_gd
+    where gd_id = #{gdId,jdbcType=INTEGER}
+  </select>
+
+    <!--查询所有的工地信息-->
+    <select id="selectAllGd" resultType="com.qf.xiangmu.pojo.Gd" resultMap="BaseResultMap">
+        select
+        *
+        from
+        t_gd
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_gd
+    where gd_id = #{gdId,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" keyColumn="gd_id" keyProperty="gdId" parameterType="com.qf.xiangmu.pojo.Gd" useGeneratedKeys="true">
+    insert into t_gd (gd_name, gd_addr, gd_info
+      )
+    values (#{gdName,jdbcType=VARCHAR}, #{gdAddr,jdbcType=VARCHAR}, #{gdInfo,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <!--添加一个工地信息-->
+  <insert id="insertSelective" keyColumn="gd_id" keyProperty="gdId" parameterType="com.qf.xiangmu.pojo.Gd" useGeneratedKeys="true">
+    insert into t_gd
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="gdName != null">
+        gd_name,
+      </if>
+      <if test="gdAddr != null">
+        gd_addr,
+      </if>
+      <if test="gdInfo != null">
+        gd_info,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="gdName != null">
+        #{gdName,jdbcType=VARCHAR},
+      </if>
+      <if test="gdAddr != null">
+        #{gdAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="gdInfo != null">
+        #{gdInfo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.qf.xiangmu.pojo.Gd">
+    update t_gd
+    <set>
+      <if test="gdName != null">
+        gd_name = #{gdName,jdbcType=VARCHAR},
+      </if>
+      <if test="gdAddr != null">
+        gd_addr = #{gdAddr,jdbcType=VARCHAR},
+      </if>
+      <if test="gdInfo != null">
+        gd_info = #{gdInfo,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where gd_id = #{gdId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.qf.xiangmu.pojo.Gd">
+    update t_gd
+    set gd_name = #{gdName,jdbcType=VARCHAR},
+      gd_addr = #{gdAddr,jdbcType=VARCHAR},
+      gd_info = #{gdInfo,jdbcType=VARCHAR}
+    where gd_id = #{gdId,jdbcType=INTEGER}
+  </update>
+</mapper>

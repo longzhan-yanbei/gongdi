@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.xiangmu.dao.UserDao">
+  <resultMap id="BaseResultMap" type="com.qf.xiangmu.pojo.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="admin" jdbcType="INTEGER" property="admin" />
+    <result column="gd_id" jdbcType="INTEGER" property="gdId" />
+    <result column="sb_id" jdbcType="INTEGER" property="sbId" />
+    <association property="gd" javaType="com.qf.xiangmu.pojo.Gd">
+      <result column="gd_name" property="gdName"/>
+    </association>
+    <association property="sb" javaType="com.qf.xiangmu.pojo.Sb">
+      <result column="sb_name" property="sbName"/>
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username, `password`, `admin`, gd_id, sb_id
+  </sql>
+
+  <!--查询全部用户：  用户id  用户名  用户身份  所处工地  所用设备  111-->
+  <select id="selectAll" resultMap="BaseResultMap">
+     SELECT u.id,u.username,u.admin,g.gd_name,s.sb_name
+            FROM t_user u
+            JOIN t_gd g
+            ON(g.gd_id=u.gd_id)
+            JOIN t_sb s
+            ON(u.sb_id=s.sb_id)
+            ORDER BY u.id
+  </select>
+
+  <!--添加一个用户  111-->
+  <insert id="insertUser" keyColumn="id" keyProperty="id" parameterType="com.qf.xiangmu.pojo.User" useGeneratedKeys="true">
+    insert into t_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        username,
+      </if>
+      <if test="password != null">
+        `password`,
+      </if>
+      <if test="admin != null">
+        `admin`,
+      </if>
+      <if test="gdId != null">
+        gd_id,
+      </if>
+      <if test="sbId != null">
+        sb_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="username != null">
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="admin != null">
+        #{admin,jdbcType=INTEGER},
+      </if>
+      <if test="gdId != null">
+        #{gdId,jdbcType=INTEGER},
+      </if>
+      <if test="sbId != null">
+        #{sbId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <!--更新一个用户-->
+  <update id="updateUser">
+    UPDATE
+    t_user
+    SET
+    <if test="username != null">
+      username=#{username},
+    </if>
+    <if test="password != null">
+      PASSWORD=#{password},
+    </if>
+    <if test="admin != null">
+      admin=#{admin},
+    </if>
+    <if test="admin == null">
+      admin=2,
+    </if>
+    <if test="gdId != null">
+      gd_id=#{gdId},
+    </if>
+    <if test="gdId == null">
+      gd_id=0,
+    </if>
+    <if test="sbId != null">
+      sb_id=#{sbId}
+    </if>
+    <if test="sbId == null">
+      sb_id=0
+    </if>
+    WHERE
+    id=#{id};
+  </update>
+
+  <!--通过id删除一个用户  111-->
+  <delete id="deletById">
+        delete
+        from
+        t_user
+        where
+        id= #{id}
+    </delete>
+
+  <!--通过id查询用户信息  111-->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+    <select id="selectMany" resultType="java.lang.Integer">
+        SELECT	COUNT(*) FROM t_user WHERE sb_id =#{sbId};
+    </select>
+    <select id="selectMany2" resultType="java.lang.Integer">
+      SELECT	COUNT(*) FROM t_user WHERE gd_id =#{gdId};
+    </select>
+
+    <!--查询全部的账号名-->
+    <select id="selectAllName" resultType="com.qf.xiangmu.pojo.User">
+      select username from t_user
+    </select>
+    <select id="selectByName" resultType="java.lang.Integer">
+      select
+      count(*)
+      from
+      t_user
+      where
+      username = #{username}
+    </select>
+  <select id="selectPassWordByName" resultType="java.lang.String">
+    select
+    password
+    from
+    t_user
+    where
+    username = #{username}
+  </select>
+
+
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qf.xiangmu.dao.SbDao">
+  <resultMap id="BaseResultMap" type="com.qf.xiangmu.pojo.Sb">
+    <id column="sb_id" jdbcType="INTEGER" property="sbId" />
+    <result column="sb_name" jdbcType="VARCHAR" property="sbName" />
+    <result column="sb_mod" jdbcType="VARCHAR" property="sbMod" />
+    <result column="sb_fac" jdbcType="VARCHAR" property="sbFac" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    sb_id, sb_name, sb_mod, sb_fac
+  </sql>
+
+  <!--通过id查询设备信息-->
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_sb
+    where sb_id = #{sbId,jdbcType=INTEGER}
+  </select>
+
+  <!--查询全部的设备列表-->
+  <select id="selectAllSb" resultMap="BaseResultMap" resultType="com.qf.xiangmu.pojo.Sb">
+    select
+    *
+    from
+    t_sb
+  </select>
+
+  <!--通过id删除设备-->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from t_sb
+    where
+    sb_id = #{sbId}
+  </delete>
+
+  <insert id="insert" keyColumn="sb_id" keyProperty="sbId" parameterType="com.qf.xiangmu.pojo.Sb" useGeneratedKeys="true">
+    insert into t_sb (sb_name, sb_mod, sb_fac
+      )
+    values (#{sbName,jdbcType=VARCHAR}, #{sbMod,jdbcType=VARCHAR}, #{sbFac,jdbcType=VARCHAR}
+      )
+  </insert>
+
+
+  <insert id="insertSelective" keyColumn="sb_id" keyProperty="sbId" parameterType="com.qf.xiangmu.pojo.Sb" useGeneratedKeys="true">
+    insert into t_sb
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="sbName != null">
+        sb_name,
+      </if>
+      <if test="sbMod != null">
+        sb_mod,
+      </if>
+      <if test="sbFac != null">
+        sb_fac,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="sbName != null">
+        #{sbName,jdbcType=VARCHAR},
+      </if>
+      <if test="sbMod != null">
+        #{sbMod,jdbcType=VARCHAR},
+      </if>
+      <if test="sbFac != null">
+        #{sbFac,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <!--更新一个设备-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.qf.xiangmu.pojo.Sb">
+    update t_sb
+    <set>
+      <if test="sbName != null">
+        sb_name = #{sbName,jdbcType=VARCHAR},
+      </if>
+      <if test="sbMod != null">
+        sb_mod = #{sbMod,jdbcType=VARCHAR},
+      </if>
+      <if test="sbFac != null">
+        sb_fac = #{sbFac,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sb_id = #{sbId,jdbcType=INTEGER}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.qf.xiangmu.pojo.Sb">
+    update t_sb
+    set sb_name = #{sbName,jdbcType=VARCHAR},
+      sb_mod = #{sbMod,jdbcType=VARCHAR},
+      sb_fac = #{sbFac,jdbcType=VARCHAR}
+    where sb_id = #{sbId,jdbcType=INTEGER}
+  </update>
+</mapper>
